@@ -28,20 +28,23 @@ Bundle "jimmyhchan/dustjs.vim"
 Bundle "tomtom/tcomment_vim.git"
 
 " Utilities
-Bundle "shougo/unite.vim"
+Bundle "Shougo/unite.vim"
+Bundle "Shougo/vimproc.vim"
 Bundle "rking/ag.vim"
 Bundle "scrooloose/syntastic.git"
 Bundle "tpope/vim-surround.git"
 Bundle "maxbrunsfeld/vim-yankstack"
 Bundle "Shougo/neocomplcache.vim"
 Bundle "Shougo/neosnippet.vim"
-Bundle 'Shougo/neosnippet-snippets'
+Bundle "Shougo/neosnippet-snippets"
+Bundle "Shougo/neosnippet-snippets"
+Bundle "tpope/vim-fugitive"
+Bundle "motemen/git-vim"
 
 " UI
 Bundle "scrooloose/nerdtree.git"
 Bundle "chriskempson/vim-tomorrow-theme"
 Bundle "bling/vim-airline"
-Bundle "nathanaelkane/vim-indent-guides"
 
 filetype plugin indent on
 
@@ -130,7 +133,6 @@ let g:neocomplcache_enable_smart_case = 1
 let g:neocomplcache_min_syntax_length = 3
 let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
 
-
 " ///////////////////////////////////
 " / Keybinds
 " ///////////////////////////////////
@@ -145,8 +147,8 @@ nnoremap <C-l> <C-w>l
 nnoremap <C-k> <C-w>k
 
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
-nnoremap <leader>t :<C-u>Unite -no-split -buffer-name=files -start-insert file_rec<CR>
-nnoremap <leader>b :<C-u>Unite -no-split -buffer-name=buffer -start-insert buffer file_mru bookmark<CR>
+nnoremap <leader>t :<C-u>Unite -no-split -buffer-name=files -start-insert file_rec/async<CR>
+noremap <leader>b :<C-u>Unite -no-split -buffer-name=buffer -start-insert buffer file_mru bookmark<CR>
 " Custom mappings for the unite buffer
 autocmd FileType unite call s:unite_settings()
 function! s:unite_settings()

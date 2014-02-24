@@ -28,7 +28,7 @@ Bundle "jimmyhchan/dustjs.vim"
 Bundle "tomtom/tcomment_vim.git"
 
 " Utilities
-Bundle "Shougo/unite.vim"
+Bundle "kien/ctrlp.vim"
 Bundle "Shougo/vimproc.vim"
 Bundle "rking/ag.vim"
 Bundle "scrooloose/syntastic.git"
@@ -133,6 +133,26 @@ let g:neocomplcache_enable_smart_case = 1
 let g:neocomplcache_min_syntax_length = 3
 let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
 
+" Unite
+" let g:unite_source_history_yank_enable = 1
+"
+" let g:unite_split_rule = 'botright'
+" let g:unite_enable_start_insert = 1
+" let g:unite_winheight = 10
+"
+" let g:unite_source_file_mru_long_limit = 3000
+" let g:unite_source_directory_mru_long_limit = 3000
+"
+" if executable('ag')
+"   let g:unite_source_grep_command = 'ag'
+"   let g:unite_source_grep_default_opts = '--literal'
+"   let g:unite_source_grep_recursive_opt = ''
+" endif
+"
+" let g:unite_source_rec_max_cache_files = 0
+" call unite#custom#source('file_rec,file_rec/async',
+" \ 'max_candidates', 0)
+
 " ///////////////////////////////////
 " / Keybinds
 " ///////////////////////////////////
@@ -146,30 +166,61 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-l> <C-w>l
 nnoremap <C-k> <C-w>k
 
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-nnoremap <leader>t :<C-u>Unite -no-split -buffer-name=files -start-insert file_rec/async<CR>
-noremap <leader>b :<C-u>Unite -no-split -buffer-name=buffer -start-insert buffer file_mru bookmark<CR>
-" Custom mappings for the unite buffer
-autocmd FileType unite call s:unite_settings()
-function! s:unite_settings()
-  " Enable navigation with control-j and control-k in insert mode
-  imap <buffer> <C-j> <Plug>(unite_select_next_line)
-  imap <buffer> <C-k> <Plug>(unite_select_previous_line)
-  imap <buffer> <ESC> <Plug>(unite_exit)
-endfunction
+" call unite#filters#matcher_default#use(['matcher_fuzzy'])
+" nnoremap <leader>t :<C-u>Unite file_rec/async<CR>
+" nnoremap <leader>b :<C-u>Unite buffer file_mru bookmark<CR>
+" nnoremap <leader>y :<C-u>Unite history/yank<CR>
+" " Custom mappings for the unite buffer
+" autocmd FileType unite call s:unite_settings()
+" function! s:unite_settings()
+"   " Enable navigation with control-j and control-k in insert mode
+"   imap <buffer> <C-j> <Plug>(unite_select_next_line)
+"   imap <buffer> <C-k> <Plug>(unite_select_previous_line)
+"   imap <buffer> <ESC> <Plug>(unite_exit)
+" endfunction
+
+nnoremap <leader>t :CtrlP<cr>
+nnoremap <leader>T :CtrlPClearCache<cr>
+nnoremap <leader>b :CtrlPBuffer<cr>
+
 
 nnoremap <silent> Q :call CloseWindowOrKillBuffer()<CR>
 nnoremap <leader>so :so %<CR>
 
-nnoremap <c-p> <Plug>yankstack_substitute_older_paste
-nnoremap <c-P> <Plug>yankstack_substitute_newer_paste
+nmap <c-p> <Plug>yankstack_substitute_older_paste
+nmap <c-P> <Plug>yankstack_substitute_newer_paste
+nnoremap <leader>y :Yank<cr>
 
 nnoremap <leader>ag :AgFromSearch<cr>
 
-nnoremap <leader>{ ysiwB
-nnoremap <leader>( ysiw(
-nnoremap <leader>" ysiw"
-nnoremap <leader>' ysiw'
+" ," Surround a word with "quotes"
+map <leader>" ysiw"
+vmap <leader>" c"<C-R>""<ESC>
+
+" ,' Surround a word with 'single quotes'
+map <leader>' ysiw'
+vmap <leader>' c'<C-R>"'<ESC>
+
+" ,) or ,( Surround a word with (parens)
+" The difference is in whether a space is put in
+map <leader>( ysiw(
+map <leader>) ysiw)
+vmap <leader>( c( <C-R>" )<ESC>
+vmap <leader>) c(<C-R>")<ESC>
+
+" ,[ Surround a word with [brackets]
+map <leader>] ysiw]
+map <leader>[ ysiw[
+vmap <leader>[ c[ <C-R>" ]<ESC>
+vmap <leader>] c[<C-R>"]<ESC>
+
+" ,{ Surround a word with {braces}
+map <leader>} ysiw{
+map <leader>{ ysiw}
+vmap <leader>} c{ <C-R>" }<ESC>
+vmap <leader>{ c{<C-R>"}<ESC>
+
+map <leader>` ysiw`
 
 nnoremap ,w :StripTrailingWhitespaces<CR>
 
@@ -182,17 +233,6 @@ nnoremap ,ow "_diwhp
 " Make 0 go to the first character rather than the beginning
 nnoremap 0 ^
 nnoremap ^ 0
-
-" Surround
-nnoremap ," ysiw"
-nnoremap ,' ysiw'
-nnoremap ,( ysiw)
-vmap ,( c(<C-R>")<ESC>
-nnoremap ,[ ysiw]
-vmap ,[ c[<C-R>"]<ESC>
-nnoremap ,{ ysiw}
-vmap ,{ c{<C-R>"}<ESC>
-nnoremap ,` ysiw`
 
 "Move back and forth through previous and next buffers
 nnoremap <silent> ,z :bp<CR>
@@ -231,14 +271,18 @@ if has('gui_running')
   set guifont=Inconsolata\ for\ Powerline:h16
 
   colorscheme Tomorrow-Night-Eighties
-  hi! link dustRef Constant
-  hi! link dustStartSectionTag Constant
-  hi! link dustSelfClosingSectionTag Constant
-  hi! link dustEndSectionTag Constant
+
+  hi! link dustKey Structure
+  hi! link dustHelper Constant
+  hi! link dustPartial Directory
+  hi! link dustStartSectionTag Directory
+  hi! link dustSelfClosingSectionTag Directory
+  hi! link dustEndSectionTag Directory
   hi! link dustSpecialChars Type
   hi! link dustFilter Identifier
-  hi! link dustConditional Constant
-  hi! link dustConditional Constant
+  hi! link dustConditional Type
+  hi! link dustContext String
+
   hi! link CursorLineNr Comment
 
   set go-=r

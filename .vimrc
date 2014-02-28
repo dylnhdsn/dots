@@ -62,6 +62,13 @@ set visualbell                  "No sounds
 set autoread                    "Reload files changed outside vim
 set hidden
 
+command! -nargs=* Wrap set wrap linebreak nolist
+" Toggle spell checking on and off with `,s`
+nmap <silent> <leader>s :set spell!<CR>
+" Set region to British English
+set spelllang=en_us
+
+
 "turn on syntax highlighting
 syntax on
 " Change leader to a comma because the backslash is too far away
@@ -269,7 +276,6 @@ inoremap <expr><C-e>  neocomplcache#cancel_popup()
 
 if has('gui_running')
   set guifont=Inconsolata\ for\ Powerline:h16
-
   colorscheme Tomorrow-Night-Eighties
 
   hi! link dustKey Structure

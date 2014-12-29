@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<root>
+  <item>
+    <name>Dylan's Magic</name>
+    <identifier>dylan.magic</identifier>
+    <autogen>
+      __HoldingKeyToKey__
+      KeyCode::S,
+
+      @begin
+      KeyCode::S
+      @end
+
+      @begin
+      KeyCode::KEY_7,
+      ModifierFlag::CONTROL_L,
+      Option::NOREPEAT
+      @end
+    </autogen>
+    <autogen>
+      __HoldingKeyToKey__
+      KeyCode::C,
+
+      @begin
+      KeyCode::C
+      @end
+
+      @begin
+      KeyCode::KEY_8,
+      ModifierFlag::CONTROL_L,
+      Option::NOREPEAT
+      @end
+    </autogen>
+    <autogen>
+      __HoldingKeyToKey__
+      KeyCode::V,
+
+      @begin
+      KeyCode::V
+      @end
+
+      @begin
+      KeyCode::KEY_9,
+      ModifierFlag::CONTROL_L,
+      Option::NOREPEAT
+      @end
+    </autogen>
+    <autogen>
+      __HoldingKeyToKey__
+      KeyCode::T,
+
+      @begin
+      KeyCode::T
+      @end
+
+      @begin
+      KeyCode::KEY_0,
+      ModifierFlag::CONTROL_L,
+      Option::NOREPEAT
+      @end
+    </autogen>
+  </item>
+</root>
+

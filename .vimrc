@@ -11,41 +11,48 @@
 " / Vundle
 " ///////////////////////////////////
 
-filetype off
+set nocompatible
+filetype off 
 
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
-Bundle "gmarik/vundle"
+Plugin 'gmarik/vundle'
 
 " Language
-Bundle "pangloss/vim-javascript"
-Bundle "digitaltoad/vim-jade.git"
-Bundle "itspriddle/vim-jquery.git"
-Bundle "kchmck/vim-coffee-script"
-Bundle "wavded/vim-stylus"
-Bundle "jimmyhchan/dustjs.vim"
-Bundle "tomtom/tcomment_vim.git"
+Plugin 'pangloss/vim-javascript'
+Plugin 'digitaltoad/vim-jade.git'
+Plugin 'itspriddle/vim-jquery.git'
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'wavded/vim-stylus'
+Plugin 'jimmyhchan/dustjs.vim'
+Plugin 'tomtom/tcomment_vim.git'
+Plugin 'mustache/vim-mustache-handlebars'
 
 " Utilities
-Bundle "kien/ctrlp.vim"
-Bundle "Shougo/vimproc.vim"
-Bundle "rking/ag.vim"
-Bundle "scrooloose/syntastic.git"
-Bundle "tpope/vim-surround.git"
-Bundle "maxbrunsfeld/vim-yankstack"
-Bundle "Shougo/neocomplcache.vim"
-Bundle "Shougo/neosnippet.vim"
-Bundle "Shougo/neosnippet-snippets"
-Bundle "Shougo/neosnippet-snippets"
-Bundle "tpope/vim-fugitive"
-Bundle "motemen/git-vim"
+Plugin 'kien/ctrlp.vim'
+Plugin 'Shougo/vimproc.vim'
+Plugin 'rking/ag.vim'
+Plugin 'scrooloose/syntastic.git'
+Plugin 'tpope/vim-surround.git'
+Plugin 'maxbrunsfeld/vim-yankstack'
+Plugin 'Shougo/neocomplcache.vim'
+Plugin 'Shougo/neosnippet.vim'
+Plugin 'Shougo/neosnippet-snippets'
+Plugin 'mmozuras/snipmate-mocha'
+Plugin 'tpope/vim-fugitive'
+Plugin 'motemen/git-vim'
+Plugin 'raimondi/delimitmate'
+Plugin 'vim-scripts/SyntaxRange'
+Plugin 'xolox/vim-notes'
+Plugin 'xolox/vim-misc'
 
 " UI
-Bundle "scrooloose/nerdtree.git"
-Bundle "chriskempson/vim-tomorrow-theme"
-Bundle "bling/vim-airline"
+Plugin 'scrooloose/nerdtree.git'
+Plugin 'chriskempson/vim-tomorrow-theme'
+Plugin 'bling/vim-airline'
 
+call vundle#end()
 filetype plugin indent on
 
 " ///////////////////////////////////
@@ -127,6 +134,9 @@ set virtualedit=all
 " / Plugin Settings
 " ///////////////////////////////////
 
+" Ag
+ca Ag Ag!
+
 " Airline
 let g:airline_left_sep = '⮀'
 let g:airline_left_alt_sep = '⮁'
@@ -134,11 +144,29 @@ let g:airline_right_sep = '⮂'
 let g:airline_right_alt_sep = '⮃'
 
 " Neocomplcache
-let g:acp_enableAtStartup = 0
-let g:neocomplcache_enable_at_startup = 1
-let g:neocomplcache_enable_smart_case = 1
-let g:neocomplcache_min_syntax_length = 3
-let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+" let g:acp_enableAtStartup = 0
+" let g:neocomplcache_enable_at_startup = 1
+" let g:neocomplcache_enable_smart_case = 1
+" let g:neocomplcache_min_syntax_length = 3
+" let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+"
+" Plugin key-mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: "\<TAB>"
+
+" For snippet_complete marker.
+if has('conceal')
+  set conceallevel=2 concealcursor=i
+endif
 
 " Unite
 " let g:unite_source_history_yank_enable = 1
@@ -198,7 +226,7 @@ nmap <c-p> <Plug>yankstack_substitute_older_paste
 nmap <c-P> <Plug>yankstack_substitute_newer_paste
 nnoremap <leader>y :Yank<cr>
 
-nnoremap <leader>ag :AgFromSearch<cr>
+nnoremap <leader>ag :AgFromSearch!<cr>
 
 " ," Surround a word with "quotes"
 map <leader>" ysiw"
@@ -270,12 +298,27 @@ inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
 inoremap <expr><C-y>  neocomplcache#close_popup()
 inoremap <expr><C-e>  neocomplcache#cancel_popup()
 
+" Semicolon magic
+" inoremap <leader>; <C-o>m`<C-o>A;<C-o>`` 
+" If there isn't one, append a semi colon to the end of the current line.
+function! s:appendSemiColon()
+  if getline('.') !~ ';$'
+    let original_cursor_position = getpos('.')
+    exec("s/$/;/")
+    call setpos('.', original_cursor_position)
+  endif
+endfunction
+
+" For programming languages using a semi colon at the end of statement.
+imap ;; <esc>:call <SID>appendSemiColon()<cr>a
+nmap <silent> ;; :call <SID>appendSemiColon()<cr>
+
 " ///////////////////////////////////
 " / UI
 " ///////////////////////////////////
 
 if has('gui_running')
-  set guifont=Inconsolata\ for\ Powerline:h16
+  set guifont=Inconsolata-dz\ for\ Powerline:h13
   colorscheme Tomorrow-Night-Eighties
 
   hi! link dustKey Structure
